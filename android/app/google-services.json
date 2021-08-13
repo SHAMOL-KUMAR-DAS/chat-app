@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "73991994859",
+    "project_id": "chatapp-4bc71",
+    "storage_bucket": "chatapp-4bc71.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:73991994859:android:04287b0639abe0e9ae2dae",
+        "android_client_info": {
+          "package_name": "com.shamol.chat_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "73991994859-bnkt11qss907hjl35cb7ok4lfhkksmtu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB-tWum5O4g-2JOKhRTg0kg8K4_OnI7uWU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "73991994859-bnkt11qss907hjl35cb7ok4lfhkksmtu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
