@@ -72,10 +72,7 @@ class _Sign_inState extends State<Sign_in> {
                   SizedBox(
                     height: MediaQuery.of(context).size.height * 0.02,
                   ),
-                  Image(
-                      image: NetworkImage(
-                          "https://cdn.pixabay.com/photo/2012/04/18/14/28/buddy-37197_1280.png",
-                          scale: 10)),
+                  Image(image: AssetImage('assets/images/front.png')),
                   SizedBox(
                     height: MediaQuery.of(context).size.height * 0.03,
                   ),

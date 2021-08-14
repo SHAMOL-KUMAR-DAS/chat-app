@@ -27,87 +27,98 @@ class _Sign_upState extends State<Sign_up> {
     }
   }
 
+  bool hidenpass = true;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Form(
-        key: _cformkey,
-        child: Center(
-        child: Card(
-          elevation: 25,
-          color: Color(0xFF21eb57),
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10))),
-          child: Container(
-            height: MediaQuery.of(context).size.height * 0.8,
-            width: MediaQuery.of(context).size.width * 0.9,
-            child: Column(
-              children: [
-                //NetworkImage(url)
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.08,
-                ),
-                Text(
-                  "Create Your Account",
-                  style: TextStyle(fontSize: 25, color: Colors.white),
-                ),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.05,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 30,right: 30),
-                  child: TextFormField(
-                    decoration: InputDecoration(hintText: "E-Mail"),
-                    onSaved: (input){
-                      setState(() {
-                        _cemail=input;
-                      });
-                    },
-                    validator: (input){
-                      if(input.isEmpty){
-                        return "Please Enter an E-Mail";
-                      }
-                      return null;
-                    },
-                  ),
-                ),
-                SizedBox(height: MediaQuery.of(context).size.height*0.04,),
-                Padding(
-                  padding: const EdgeInsets.only(left: 30,right: 30),
-                  child: TextFormField(
-                    obscureText: true,
-                    decoration: InputDecoration(hintText: "Password"),
-                    onSaved: (input){
-                      setState(() {
-                        _cpassword=input;
-                      });
-                    },
-                    validator: (input){
-                      if(input.length<6){
-                        return "Please Enter a Password more than 5";
-                      }
-                      return null;
-                    },
-                  ),
-                ),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.04,
-                ),
-                FlatButton(
-                    color: Colors.white,
-                    minWidth: MediaQuery.of(context).size.width * 0.5,
-                    onPressed: () {
-                      setState(() {
-                        Sign_Up();
-                      });
-                    },
-                    child: Text("Create Account")),
-              ],
-            ),
-          ),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        title: Text(
+          "Stay With Sign Up",
+          style: TextStyle(fontSize: 25, color: Colors.black),
         ),
       ),
+      body: SingleChildScrollView(
+        child: Form(
+          key: _cformkey,
+          child: Center(
+          child: Column(
+            children: [
+              Image(image: AssetImage('assets/images/sign.png')),
+              // SizedBox(
+              //   height: MediaQuery.of(context).size.height * 0.05,
+              // ),
+              Padding(
+                padding: const EdgeInsets.only(left: 30,right: 30),
+                child: TextFormField(
+                  decoration: InputDecoration(hintText: "E-Mail"),
+                  onSaved: (input){
+                    setState(() {
+                      _cemail=input;
+                    });
+                  },
+                  validator: (input){
+                    if(input.isEmpty){
+                      return "Please Enter an E-Mail";
+                    }
+                    return null;
+                  },
+                ),
+              ),
+              SizedBox(height: MediaQuery.of(context).size.height*0.04,),
+              Padding(
+                padding: const EdgeInsets.only(left: 30,right: 30),
+                child: TextFormField(
+                  obscureText: hidenpass,
+                  decoration: InputDecoration(
+                      hintText: "Password",
+                    suffixIcon: InkWell(
+                      onTap: _togglePassView,
+                      child: Icon(Icons.visibility),
+                    )
+                  ),
+                  onSaved: (input){
+                    setState(() {
+                      _cpassword=input;
+                    });
+                  },
+                  validator: (input){
+                    if(input.length<6){
+                      return "Please Enter a Password more than 5";
+                    }
+                    return null;
+                  },
+                ),
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.06,
+              ),
+              FlatButton(
+                  color: Colors.red,
+                  minWidth: MediaQuery.of(context).size.width * 0.5,
+                  onPressed: () {
+                    setState(() {
+                      Sign_Up();
+                    });
+                  },
+                  child: Text("Create Account")),
+            ],
+          ),
+        ),
+        ),
       ),
     );
+  }
+  void _togglePassView(){
+    if(hidenpass == true){
+      hidenpass = false;
+    }else{
+      hidenpass = true;
+    }
+    setState(() {
+      
+    });
   }
 }
