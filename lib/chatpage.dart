@@ -90,10 +90,11 @@ class _ChattingState extends State<Chatting> {
               width: MediaQuery.of(context).size.width * 0.75,
               child: Center(
                 child: TextFormField(
+                  style: TextStyle(color: Colors.white),
                   cursorColor: Colors.white,
                   decoration: InputDecoration(
                     hintText: "Type your message",
-                    hintStyle: TextStyle(color: Colors.white),
+                    hintStyle: TextStyle(color: Color(0xFFe5ff00)),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(25.0),
                       borderSide: BorderSide(color: Colors.white, width: 3.0),
