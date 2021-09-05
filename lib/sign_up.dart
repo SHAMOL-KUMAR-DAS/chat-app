@@ -10,12 +10,33 @@ class Sign_up extends StatefulWidget {
 
 class _Sign_upState extends State<Sign_up> {
 
+  // final TextEditingController _emailController = TextEditingController();
+  // final TextEditingController _otpController = TextEditingController();
+  //
+  // void sendOTP() async {
+  //   EmailAuth.sessionName = 'Test Session';
+  //   var res = await EmailAuth.sendOtp(receiverMail: _emailController.text);
+  //   if(res){
+  //     print('OTP Sent');
+  //   }else{
+  //     print('We could not send the OTP');
+  //   }
+  // }
+  //
+  // void verifyOTP()async{
+  //   var res = EmailAuth.validate(receiverMail: _emailController.text, userOTP: _otpController.text);
+  //   if(res){
+  //     print('OTP Verified');
+  //   }else{
+  //     print('Invalid OTP');
+  //   }
+  // }
+
   String _cemail, _cpassword;
   final GlobalKey<FormState> _cformkey=GlobalKey<FormState>();
 
   Future<void> Sign_Up()async{
     final cformkey=_cformkey.currentState;
-
     if(cformkey.validate()){
       cformkey.save();
       try{
@@ -53,7 +74,16 @@ class _Sign_upState extends State<Sign_up> {
               Padding(
                 padding: const EdgeInsets.only(left: 30,right: 30),
                 child: TextFormField(
-                  decoration: InputDecoration(hintText: "E-Mail"),
+                  //controller: _emailController,
+                  decoration: InputDecoration(
+                      hintText: "E-Mail",
+                    // suffixIcon: TextButton(
+                    //   child: Text("Send OTP"),
+                    //   onPressed: (){
+                    //     sendOTP();
+                    //   },
+                    // )
+                  ),
                   onSaved: (input){
                     setState(() {
                       _cemail=input;
@@ -68,6 +98,44 @@ class _Sign_upState extends State<Sign_up> {
                 ),
               ),
               SizedBox(height: MediaQuery.of(context).size.height*0.04,),
+              // Padding(
+              //   padding: const EdgeInsets.only(left: 30,right: 30),
+              //   child: TextFormField(
+              //     //obscureText: hidenpass,
+              //     controller: _otpController,
+              //     decoration: InputDecoration(
+              //         hintText: "OTP",
+              //         // suffixIcon: InkWell(
+              //         //   onTap: _togglePassView,
+              //         //   child: Icon(Icons.visibility),
+              //         // )
+              //     ),
+              //     onTap: (){
+              //       verifyOTP();
+              //     },
+              //     // onSaved: (input){
+              //     //   setState(() {
+              //     //     _cpassword=input;
+              //     //   });
+              //     // },
+              //     // validator: (input){
+              //     //   if(input.length<6){
+              //     //     return "Please Enter a Password more than 5";
+              //     //   }
+              //     //   return null;
+              //     // },
+              //   ),
+              // ),
+              // FlatButton(
+              //     color: Colors.red,
+              //     minWidth: MediaQuery.of(context).size.width * 0.5,
+              //     onPressed: () {
+              //       setState(() {
+              //         Sign_Up();
+              //       });
+              //     },
+              //     child: Text("Verify OTP")),
+              // SizedBox(height: MediaQuery.of(context).size.height*0.04,),
               Padding(
                 padding: const EdgeInsets.only(left: 30,right: 30),
                 child: TextFormField(

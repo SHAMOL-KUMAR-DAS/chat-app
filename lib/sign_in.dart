@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:chatting_app/chatpage.dart';
 import 'package:chatting_app/sign_up.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +14,7 @@ class _Sign_inState extends State<Sign_in> {
   String _email, _password;
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
 
-  bool hidePassword = true;
+  //bool hidePassword = true;
 
   Future<void> SignIn() async {
     final formstate = _formkey.currentState;
@@ -30,11 +32,11 @@ class _Sign_inState extends State<Sign_in> {
   }
 
   bool _obscureText = true;
-
-  //String _password;
-
-  // Toggles the password show status
   void _toggle() {
+    // if(_obscureText == true){
+    //   _obscureText = false;
+    // }else
+    //   _obscureText =true;
     setState(() {
       _obscureText = !_obscureText;
     });
@@ -117,17 +119,19 @@ class _Sign_inState extends State<Sign_in> {
                             return null;
                           },
                           style: TextStyle(color: Colors.black),
-                          obscureText: hidePassword,
+                          obscureText: _obscureText,
 
                           decoration: InputDecoration(
                               labelText: "Password",
                               suffixIcon: InkWell(
-                                  onTap: VisiblePassword,
-                                  child: Icon(Icons.visibility,color: Colors.black,)),
-                              labelStyle: TextStyle(color: Colors.black),
+                                  //onTap: VisiblePassword,
+                                onTap: _toggle,
+                                  child: _obscureText? Icon(Icons.visibility_off):Icon(Icons.visibility),
                               ),
+                            labelStyle: TextStyle(color: Colors.black)
                         ),
                       ),
+                      )
                     ],
                   ),
                   SizedBox(
@@ -169,17 +173,5 @@ class _Sign_inState extends State<Sign_in> {
         ),
       ),
     );
-  }
-
-  void VisiblePassword(){
-    if(hidePassword == true){
-      hidePassword = false;
-    }
-    else{
-      hidePassword = true;
-    }
-    setState(() {
-
-    });
   }
 }

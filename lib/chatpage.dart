@@ -17,7 +17,6 @@ class _ChattingState extends State<Chatting> {
     FirebaseUser userData = await FirebaseAuth.instance.currentUser();
     setState(() {
       user = userData;
-      print(userData.email);
     });
   }
 
@@ -60,22 +59,26 @@ class _ChattingState extends State<Chatting> {
                 (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
               if (!snapshot.hasData) {
                 return Text('Loading...');
-              }
+              } else
               return ListView(
                   shrinkWrap: true,
                   children: snapshot.data.documents.map((document) {
-                    return ListTile(
-                        title: Text(
-                          document['Message'] ?? '',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        subtitle: Text(
-                          document['email'] ?? '',
-                          style: TextStyle(color: Colors.white),
-                        ));
+                    return Container(
+                      height: MediaQuery.of(context).size.height * 0.1,
+                      width: MediaQuery.of(context).size.width * user.email.length,
+                      color: Colors.red,
+                      child: ListTile(
+                          title: Text(
+                            document['Message'] ?? '',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          subtitle: Text(
+                            document['email'] ?? '',
+                            style: TextStyle(color: Colors.white),
+                          )),
+                    );
                   }).toList());
             }),
-        SizedBox(height: MediaQuery.of(context).size.height * 0.5),
       ])),
       bottomSheet: Container(
         color: Color(0xFF3d403d),
