@@ -1,3 +1,6 @@
+import 'package:chatting_app/all_users.dart';
+import 'package:chatting_app/auth.dart';
+import 'package:chatting_app/sign_in.dart';
 import 'package:flutter/material.dart';
 import 'package:chatting_app/splash.dart';
 
@@ -23,7 +26,17 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.green,
       ),
-      home: Splash(),
+      home:
+      //Splash(),
+      FutureBuilder(
+          future: AuthMethods().getCurrentUser(),
+          builder: (context, AsyncSnapshot<dynamic> snapshot){
+            if(snapshot.hasData){
+              return All_Users();
+            } else{
+              return Sign_in();
+            }
+          }),
       debugShowCheckedModeBanner: false,
     );
   }

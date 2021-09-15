@@ -32,6 +32,13 @@ dependencies:
   firebase_auth: ^0.8.4+4
   cloud_firestore:
   firebase_core: ^0.3.4
+  email_auth: ^0.0.1+4
+  image_picker: ^0.8.3+3
+  firebase_storage:
+  google_sign_in: ^5.1.0
+  random_string:
+  shared_preferences: ^2.0.7
+  flutter_signin_button: ^2.0.0
 
 dev_dependencies:
   flutter_test:

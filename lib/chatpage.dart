@@ -3,28 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import 'database.dart';
+
 class Chatting extends StatefulWidget {
+  String userid, sender, senderuid;
+  Chatting(this.userid, this.sender, this.senderuid);
   @override
-  _ChattingState createState() => _ChattingState();
+  _ChattingState createState() => _ChattingState(this.userid, this.sender, this.senderuid);
 }
 
 class _ChattingState extends State<Chatting> {
   String _message;
-  Firestore firestore = Firestore.instance;
-
-  FirebaseUser user;
-  Future<void> getUserData() async {
-    FirebaseUser userData = await FirebaseAuth.instance.currentUser();
-    setState(() {
-      user = userData;
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    getUserData();
-  }
+  String userid, sender, senderuid;
+  _ChattingState(this.userid, this.sender, this.senderuid);
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,17 +23,11 @@ class _ChattingState extends State<Chatting> {
       appBar: AppBar(
         backgroundColor: Color(0xFF3d403d),
         elevation: 0,
-        title: Center(
-            child: Text(
-          "Chat Page",
-          style: TextStyle(color: Colors.white),
-        )),
         actions: [
           FlatButton(
               onPressed: () {
                 setState(() {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => Sign_in()));
+                  Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>Sign_in()), (route) => false);
                 });
               },
               child: Icon(
@@ -52,33 +37,45 @@ class _ChattingState extends State<Chatting> {
         ],
       ),
       body: SingleChildScrollView(
-          child: Column(children: [
+          child: Column(
+              children: [
         StreamBuilder(
-            stream: Firestore.instance.collection('chat').snapshots(),
+            stream: Firestore.instance.collection('chat').document(userid).collection('Message').document(senderuid
+            ).collection('Individual').orderBy('messageTime', descending: false).snapshots(),
             builder:
                 (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
               if (!snapshot.hasData) {
                 return Text('Loading...');
               } else
               return ListView(
+                  physics: NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                   children: snapshot.data.documents.map((document) {
-                    return Container(
-                      height: MediaQuery.of(context).size.height * 0.1,
-                      width: MediaQuery.of(context).size.width * user.email.length,
-                      color: Colors.red,
-                      child: ListTile(
-                          title: Text(
-                            document['Message'] ?? '',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          subtitle: Text(
-                            document['email'] ?? '',
-                            style: TextStyle(color: Colors.white),
-                          )),
-                    );
+                    return ListTile(
+                        title: Text(
+                          document['Message'] ?? '',
+                          style: TextStyle(color: Colors.white),
+                        ),);
                   }).toList());
             }),
+                StreamBuilder(
+                    stream: Firestore.instance.collection('chat').orderBy('messageTime', descending: false).snapshots(),
+                    builder:
+                        (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                      if (!snapshot.hasData) {
+                        return Text('Loading...');
+                      } else
+                        return ListView(
+                            physics: NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            children: snapshot.data.documents.map((document) {
+                              return ListTile(
+                                title: Text(
+                                  document['Message'] ?? '',
+                                  style: TextStyle(color: Colors.white),
+                                ),);
+                            }).toList());
+                    }),
       ])),
       bottomSheet: Container(
         color: Color(0xFF3d403d),
@@ -119,13 +116,14 @@ class _ChattingState extends State<Chatting> {
               ),
             ),
             FlatButton(
-                onPressed: () {
-                  setState(() {
-                    firestore.collection('chat').add({
-                      'Message': _message,
-                      'email': user.email,
-                    });
-                  });
+                onPressed: () async{
+                  FirebaseUser user = await FirebaseAuth.instance.currentUser();
+                  // Firestore.instance.collection('chat').document(userid).collection(user.uid).document().setData(
+                  Firestore.instance.collection('chat').document().setData(
+                      {
+                        'Message': _message,
+                        'messageTime': DateTime.now()
+                      }).then((value) => null);
                 },
                 child: Icon(
                   Icons.send,

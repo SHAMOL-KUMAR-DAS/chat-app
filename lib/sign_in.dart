@@ -1,9 +1,11 @@
-import 'dart:ui';
-
+import 'package:chatting_app/all_users.dart';
+import 'package:chatting_app/auth.dart';
+import 'package:email_auth/email_auth.dart';
 import 'package:chatting_app/chatpage.dart';
 import 'package:chatting_app/sign_up.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_signin_button/flutter_signin_button.dart';
 
 class Sign_in extends StatefulWidget {
   @override
@@ -24,7 +26,7 @@ class _Sign_inState extends State<Sign_in> {
         FirebaseUser user = await FirebaseAuth.instance
             .signInWithEmailAndPassword(email: _email, password: _password);
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => Chatting()));
+            context, MaterialPageRoute(builder: (context) => All_Users()));
       } catch (e) {
         print(e.message);
       }
@@ -147,11 +149,21 @@ class _Sign_inState extends State<Sign_in> {
                           SignIn();
                         });
                       },
-                      child: Text("Sign In")),
+                      child: Text("Sign In",style: TextStyle(color: Colors.white),)),
+
+                  // FlatButton(
+                  //     color: Colors.blue,
+                  //     minWidth: MediaQuery.of(context).size.width * 0.5,
+                  //     shape: RoundedRectangleBorder(
+                  //         borderRadius: BorderRadius.circular(20)),
+                  //     onPressed: () {
+                  //       AuthMethods().signInWithGoogle(context);
+                  //     },
+                  //     child: Text("Sign in with Google",style: TextStyle(color: Colors.white),)),
                   SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.06,
+                    height: MediaQuery.of(context).size.height * 0.025,
                   ),
-                  Text("Don't have an Account?"),
+                  Text("Don't have an Account?",style: TextStyle(fontWeight: FontWeight.w700),),
                   SizedBox(
                     height: MediaQuery.of(context).size.height * 0.01,
                   ),
@@ -165,7 +177,13 @@ class _Sign_inState extends State<Sign_in> {
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) => Sign_up()));
                       },
-                      child: Text("Sign Up"))
+                      child: Text("Sign Up",style: TextStyle(color: Colors.white),)),
+                  Text("OR",style: TextStyle(fontWeight: FontWeight.w900),),
+                  SignInButton(
+                      Buttons.Google,
+                      onPressed: (){
+                        AuthMethods().signInWithGoogle(context);
+                      }),
                 ],
               ),
             ),
