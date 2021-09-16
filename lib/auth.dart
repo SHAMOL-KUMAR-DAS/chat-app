@@ -53,4 +53,10 @@ class AuthMethods{
       });
     }
   }
+
+  Future signOut() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.clear();
+    await auth.signOut();
+  }
 }

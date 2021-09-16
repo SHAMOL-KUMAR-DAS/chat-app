@@ -1,3 +1,4 @@
+import 'package:chatting_app/auth.dart';
 import 'package:chatting_app/chatpage.dart';
 import 'package:chatting_app/sign_in.dart';
 import 'package:flutter/material.dart';
@@ -12,20 +13,6 @@ class All_Users extends StatefulWidget {
 }
 
 class _All_UsersState extends State<All_Users> {
-  String fname,lname,imageurl;
-
-  _fetch()async{
-    final firebaseUser = await FirebaseAuth.instance.currentUser();
-    if(firebaseUser!=null)
-      await Firestore.instance.collection('chat').document().get().then((ds){
-        fname=ds.data['First_Name'];
-        lname=ds.data['Last_Name'];
-        imageurl = ds.data['Image'];
-      }).catchError((e){
-        print(e);
-      });
-  }
-
   FirebaseUser user;
   Future<void> getUserData() async {
     FirebaseUser userData = await FirebaseAuth.instance.currentUser();
@@ -52,103 +39,135 @@ class _All_UsersState extends State<All_Users> {
         actions: [
           FlatButton(
               onPressed: (){
-                Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>Sign_in()), (route) => false);
+                //Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>Sign_in()), (route) => false);
+                AuthMethods().signOut().then((s){
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Sign_in()),result: (route) => false);
+                });
               },
               child: Icon(Icons.logout,color: Colors.white,))],
       ),
       body:
-      StreamBuilder(
-          stream: Firestore.instance.collection('chat').snapshots(),
-          builder:
-              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (!snapshot.hasData) {
-              return Text(
-                'Loading...',
-                style: TextStyle(color: Colors.white),
-              );
-            } else {
-              return
-                ListView(
-                    physics: NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    children: snapshot.data.documents.map((document) {
-                      // if(user.email != document['E-Mail'] ?? "") {
-                      //print(document['E-Mail'] ?? "");
-                      // print('Shamol Kumar ${user.email}');
-                      if (user.email == document['E-Mail']) {
-                        return Container(
-                          height: 0,
-                          width: 0,
-                        );
-                      }
-                      else {
-                        //print(document['E-Mail']);
-                        return Container(
-                          height: MediaQuery
-                              .of(context)
-                              .size
-                              .height * 0.07,
-                          width: MediaQuery
-                              .of(context)
-                              .size
-                              .width,
-                          //color: Colors.red,
-                          child:ListTile(
-                            title: FlatButton(
-                              onPressed: () {
-                                String userid = document.documentID;
-                                //if(document[''])
-                                Navigator.push(context, MaterialPageRoute(
-                                    builder: (context) => Chatting(userid,document['First_Name'],user.uid)));
-                              },
-                              child: Row(
-                                children: [
-                                  CircleAvatar(
-                                    radius: 20.0,
-                                    backgroundImage: NetworkImage(
-                                        document['Image'] ?? ""
-                                    ),
+      Column(
+        children: [
+          Container(
+            height: MediaQuery.of(context).size.height * 0.05,
+            margin: EdgeInsets.all(10),
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: Colors.grey,
+                width: 2.5,
+                style: BorderStyle.solid,
+              ),
+              borderRadius: BorderRadius.circular(25)
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                    child: TextFormField(decoration: InputDecoration(
+                  hintText: "Search User",
+                  border: InputBorder.none
+                  //labelText: "Search",
+                ),)),
+                Icon(Icons.search)
+              ],
+            ),
+          ),
+          StreamBuilder(
+              stream: Firestore.instance.collection('chat').snapshots(),
+              builder:
+                  (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (!snapshot.hasData) {
+                  return Text(
+                    'Loading...',
+                    style: TextStyle(color: Colors.white),
+                  );
+                } else {
+                  return
+                    ListView(
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        children: snapshot.data.documents.map((document) {
+                          // if(user.email != document['E-Mail'] ?? "") {
+                          //print(document['E-Mail'] ?? "");
+                          //print('Shamol Kumar ${fname}');
+                          if (user.email == document['E-Mail']) {
+                            return Container(
+                              height: 0,
+                              width: 0,
+                            );
+                          }
+                          else {
+                            //print(document['E-Mail']);
+                            return Container(
+                              height: MediaQuery
+                                  .of(context)
+                                  .size
+                                  .height * 0.07,
+                              width: MediaQuery
+                                  .of(context)
+                                  .size
+                                  .width,
+                              //color: Colors.red,
+                              child:ListTile(
+                                title: FlatButton(
+                                  onPressed: () {
+                                    String userid = document.documentID;
+                                    //print(user.uid);
+                                    //if(document[''])
+                                    Navigator.push(context, MaterialPageRoute(
+                                        builder: (context) => Chatting(userid,document['Image'],document['First_Name'],user.uid,user.email,document['E-Mail'],user.photoUrl)));
+                                  },
+                                  child: Row(
+                                    children: [
+                                      CircleAvatar(
+                                        radius: 20.0,
+                                        backgroundImage: NetworkImage(
+                                            document['Image'] ?? ""
+                                        ),
+                                      ),
+                                      SizedBox(width: 10,),
+                                      Text(
+                                        document['First_Name'] ?? '',
+                                        style: TextStyle(color: Colors.black,
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                      SizedBox(width: 5,),
+                                      Text(
+                                        document['Last_Name'] ?? '',
+                                        style: TextStyle(color: Colors.black,
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    ],
                                   ),
-                                  SizedBox(width: 10,),
-                                  Text(
-                                    document['First_Name'] ?? '',
-                                    style: TextStyle(color: Colors.black,
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                  SizedBox(width: 5,),
-                                  Text(
-                                    document['Last_Name'] ?? '',
-                                    style: TextStyle(color: Colors.black,
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                ],
-                              ),
-                            ),
+                                ),
 
-                            // FlatButton(
-                            //     color: Colors.white,
-                            //     shape: RoundedRectangleBorder(
-                            //         borderRadius: BorderRadius
-                            //             .circular(20)
-                            //     ),
-                            //     onPressed: () {
-                            //       String userid = document
-                            //           .documentID;
-                            //       Navigator.push(context,
-                            //           MaterialPageRoute(
-                            //               builder: (context) =>
-                            //                   Order_History(
-                            //                       userid)));
-                            //     },
-                            //     child: Text('Order History'))
-                          ),
-                        );
-                      }
-                    }).toList());
-            }
-          }
+                                // FlatButton(
+                                //     color: Colors.white,
+                                //     shape: RoundedRectangleBorder(
+                                //         borderRadius: BorderRadius
+                                //             .circular(20)
+                                //     ),
+                                //     onPressed: () {
+                                //       String userid = document
+                                //           .documentID;
+                                //       Navigator.push(context,
+                                //           MaterialPageRoute(
+                                //               builder: (context) =>
+                                //                   Order_History(
+                                //                       userid)));
+                                //     },
+                                //     child: Text('Order History'))
+                              ),
+                            );
+                          }
+                        }).toList());
+                }
+              }
+          ),
+        ],
       ),
     );
   }
