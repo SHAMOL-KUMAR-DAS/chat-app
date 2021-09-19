@@ -6,10 +6,27 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'database.dart';
+import 'login_profile.dart';
 
 class All_Users extends StatefulWidget {
   @override
   _All_UsersState createState() => _All_UsersState();
+}
+String fname, lname, address, gmail, imageurl, mobile;
+_fetch()async{
+  final firebaseUser = await FirebaseAuth.instance.currentUser();
+  if(firebaseUser!=null)
+    await Firestore.instance.collection('chat').document(firebaseUser.uid).get().then((ds){
+      fname=ds.data['First_Name'];
+      lname = ds.data['Last_Name'];
+      address=ds.data['Address'];
+      gmail=ds.data['E-Mail'];
+      imageurl = ds.data['Image'];
+      mobile = ds.data['Mobile'];
+
+    }).catchError((e){
+      print(e);
+    });
 }
 
 class _All_UsersState extends State<All_Users> {
@@ -35,6 +52,30 @@ class _All_UsersState extends State<All_Users> {
         backgroundColor: Color(0xFFe37c22),
         elevation: 0,
         automaticallyImplyLeading: false,
+        leading: GestureDetector(
+          onTap: (){
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>Login_Profile(imageurl,fname,address,gmail,mobile)));
+          },
+          child: Padding(
+            padding: const EdgeInsets.only(top: 5,left: 5),
+            child: FutureBuilder(
+              future: _fetch(),
+              builder: (context,snapshot){
+                if(snapshot.connectionState!= ConnectionState.done)
+                  return Text("",style: TextStyle(color: Colors.white),);
+                return Column(
+                  children: [
+                    CircleAvatar(
+                      radius: 22.0,
+                      backgroundImage: NetworkImage(imageurl),
+                    ),
+
+                  ],
+                );
+              },
+            ),
+          ),
+        ),
         title: Center(child: Text('Messaging')),
         actions: [
           FlatButton(
@@ -49,30 +90,30 @@ class _All_UsersState extends State<All_Users> {
       body:
       Column(
         children: [
-          Container(
-            height: MediaQuery.of(context).size.height * 0.05,
-            margin: EdgeInsets.all(10),
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: Colors.grey,
-                width: 2.5,
-                style: BorderStyle.solid,
-              ),
-              borderRadius: BorderRadius.circular(25)
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                    child: TextFormField(decoration: InputDecoration(
-                  hintText: "Search User",
-                  border: InputBorder.none
-                  //labelText: "Search",
-                ),)),
-                Icon(Icons.search)
-              ],
-            ),
-          ),
+          // Container(
+          //   height: MediaQuery.of(context).size.height * 0.05,
+          //   margin: EdgeInsets.all(10),
+          //   padding: EdgeInsets.symmetric(horizontal: 20),
+          //   decoration: BoxDecoration(
+          //     border: Border.all(
+          //       color: Colors.grey,
+          //       width: 2.5,
+          //       style: BorderStyle.solid,
+          //     ),
+          //     borderRadius: BorderRadius.circular(25)
+          //   ),
+          //   child: Row(
+          //     children: [
+          //       Expanded(
+          //           child: TextFormField(decoration: InputDecoration(
+          //         hintText: "Search User",
+          //         border: InputBorder.none
+          //         //labelText: "Search",
+          //       ),)),
+          //       Icon(Icons.search)
+          //     ],
+          //   ),
+          // ),
           StreamBuilder(
               stream: Firestore.instance.collection('chat').snapshots(),
               builder:
