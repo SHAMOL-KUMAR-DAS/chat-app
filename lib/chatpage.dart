@@ -109,7 +109,7 @@ class _ChattingState extends State<Chatting> {
             children: [
               CircleAvatar(
                 radius: 20.0,
-                backgroundImage: NetworkImage(widget.receiverImage),
+                backgroundImage: widget.receiverImage != null ? NetworkImage(widget.receiverImage) : AssetImage('assets/images/blue.png'),
               ),
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.015,

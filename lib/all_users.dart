@@ -67,7 +67,8 @@ class _All_UsersState extends State<All_Users> {
                   children: [
                     CircleAvatar(
                       radius: 22.0,
-                      backgroundImage: NetworkImage(imageurl),
+                      //backgroundImage: NetworkImage(imageurl),
+                      backgroundImage: imageurl != null ? NetworkImage(imageurl) : AssetImage('assets/images/blue.png'),
                     ),
 
                   ],

@@ -39,10 +39,7 @@ class _User_InfoState extends State<User_Info> {
     FirebaseUser user = await FirebaseAuth.instance.currentUser();
     await DataBaseUserService(uid: user.uid).updateuserimage(imgurl);
   }
-
-
   File _image;
-
   Future cameraImage() async {
     final pickedFile = await ImagePicker().pickImage(source: ImageSource.camera);
 

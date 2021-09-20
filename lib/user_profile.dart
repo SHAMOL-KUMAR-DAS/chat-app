@@ -26,7 +26,7 @@ class _User_ProfileState extends State<User_Profile> {
           children: [
             CircleAvatar(
               radius: 120,
-              backgroundImage: NetworkImage(widget.receiverImage),
+              backgroundImage: widget.receiverImage != null ? NetworkImage(widget.receiverImage) : AssetImage('assets/images/blue.png'),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 10),
