@@ -6,6 +6,13 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
+import 'dart:async';
+
+import 'package:agora_rtc_engine/rtc_engine.dart';
+// import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
+
+import './call.dart';
 
 import 'database.dart';
 
@@ -50,6 +57,37 @@ class _ChattingState extends State<Chatting> {
     getAndSetMessages();
   }
 
+  final _channelController = 'connect';
+  bool _validateError = false;
+  ClientRole _role = ClientRole.Broadcaster;
+
+  Future<void> onJoin() async {
+    // update input validation
+    setState(() {
+      _channelController.isEmpty
+          ? _validateError = true
+          : _validateError = false;
+    });
+    if (_channelController.isNotEmpty) {
+      await _handleCameraAndMic(Permission.camera);
+      await _handleCameraAndMic(Permission.notification);
+      await _handleCameraAndMic(Permission.microphone);
+      await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => CallPage(
+            channelName: _channelController,
+            role: _role,
+          ),
+        ),
+      );
+    }
+  }
+  Future<void> _handleCameraAndMic(Permission permission) async {
+    final status = await permission.request();
+    print(status);
+  }
+
   @override
   void initState() {
     doThisLaunch();
@@ -83,13 +121,15 @@ class _ChattingState extends State<Chatting> {
         actions: [
           FlatButton(
               onPressed: () {
+                onJoin();
                 setState(() {
                   //print(widget.userimage);
                   // Navigator.pushAndRemoveUntil(
                   //     context,
                   //     MaterialPageRoute(builder: (context) => Call_Index()),
                   //     (route) => false);
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=>Call_Index()));
+                  //Navigator.push(context, MaterialPageRoute(builder: (context)=>Call_Index()));
+                  //_role = value;
                 });
               },
               child: Icon(

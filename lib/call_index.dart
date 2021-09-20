@@ -47,7 +47,7 @@ class IndexState extends State<Call_Index> {
                             // border: UnderlineInputBorder(
                             //   borderSide: BorderSide(width: 1),
                             // ),
-                            hintText: 'Type excelitai',
+                            hintText: 'Type excelit',
                             labelText: 'Channel Name'
                         ),
                       ))
@@ -119,6 +119,7 @@ class IndexState extends State<Call_Index> {
     });
     if (_channelController.text.isNotEmpty) {
       await _handleCameraAndMic(Permission.camera);
+      //await _handleCameraAndMic(Permission.notification);
       await _handleCameraAndMic(Permission.microphone);
       await Navigator.push(
         context,
