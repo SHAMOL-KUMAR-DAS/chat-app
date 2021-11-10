@@ -81,10 +81,7 @@ class _All_UsersState extends State<All_Users> {
         actions: [
           FlatButton(
               onPressed: (){
-                //Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>Sign_in()), (route) => false);
-                AuthMethods().signOut().then((s){
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Sign_in()),result: (route) => false);
-                });
+                Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>Sign_in()), (route) => false);
               },
               child: Icon(Icons.logout,color: Colors.white,))],
       ),

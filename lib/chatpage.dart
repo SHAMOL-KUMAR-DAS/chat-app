@@ -57,7 +57,7 @@ class _ChattingState extends State<Chatting> {
     getAndSetMessages();
   }
 
-  final _channelController = 'connect';
+  final _channelController = 'smart';
   bool _validateError = false;
   ClientRole _role = ClientRole.Broadcaster;
 

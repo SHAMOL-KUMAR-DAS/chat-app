@@ -19,8 +19,8 @@ class _Sign_upState extends State<Sign_up> {
   //final TextEditingController _otpController = TextEditingController();
 
   void sendOTP() async {
-    EmailAuth.sessionName = 'Excel IT AI E-Commerce';
-    if (_password == _repassword && _password.length>5) {
+    EmailAuth.sessionName = 'Shamol Kumar Das Chatting App';
+    if (RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{6,}$').hasMatch(_password) && _password == _repassword) {
       var res = await EmailAuth.sendOtp(receiverMail: _emailController.text);
     if (res) {
       print('Sent OTP Successfully');
@@ -33,15 +33,6 @@ class _Sign_upState extends State<Sign_up> {
       );
     }
   }
-    else if (_password.length < 6) {
-      showDialog(context: context, builder: (BuildContext context) {
-        return new AlertDialog(
-          title: new Text("Your Password is too Short"),
-          content: Text('Please Enter Password More Than 5 Character'),
-        );
-      }
-      );
-    }
     else if (_password.isEmpty) {
       showDialog(context: context, builder: (BuildContext context) {
         return new AlertDialog(
@@ -57,6 +48,42 @@ class _Sign_upState extends State<Sign_up> {
         );
       }
       );
+    }
+    else if(!RegExp(r'^.{6,}$').hasMatch(_password)){
+      showDialog(context: context, builder: (BuildContext context){
+        return AlertDialog(
+          title: Text('Enter Your Password more than 5 Characters'),
+        );
+      });
+    }
+    else if(!RegExp(r'^(?=.*?[A-Z])').hasMatch(_password)){
+      showDialog(context: context, builder: (BuildContext context){
+        return AlertDialog(
+          title: Text('Enter an Upper Case'),
+        );
+      });
+    }
+    else if(!RegExp(r'^(?=.*?[a-z])').hasMatch(_password)){
+      showDialog(context: context, builder: (BuildContext context){
+        return AlertDialog(
+          title: Text('Enter an Lower Case'),
+        );
+      });
+      //print('Enter an Lower Case');
+    }
+    else if(!RegExp(r'^(?=.*?[0-9])').hasMatch(_password)){
+      showDialog(context: context, builder: (BuildContext context){
+        return AlertDialog(
+          title: Text('Enter a Number'),
+        );
+      });
+    }
+    else if(!RegExp(r'^(?=.*?[!@#\$&*~])').hasMatch(_password)){
+      showDialog(context: context, builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Enter a Special Character'),
+        );
+      });
     }
     else if (_password != _repassword) {
       showDialog(context: context, builder: (BuildContext context) {
@@ -89,8 +116,7 @@ class _Sign_upState extends State<Sign_up> {
     if(cformkey.validate()){
       cformkey.save();
       try {
-        if (_password == _repassword
-            && _password.length >= 6) {
+        if (RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{6,}$').hasMatch(_password) && _password == _repassword) {
           FirebaseUser newuser = await FirebaseAuth.instance
               .createUserWithEmailAndPassword(
               email: _emailController.text, password: _password);

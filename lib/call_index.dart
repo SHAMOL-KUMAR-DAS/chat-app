@@ -28,7 +28,7 @@ class IndexState extends State<Call_Index> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(child: Text('Excel IT Live Calling')),
+        title: Center(child: Text('Live Calling')),
       ),
       body: Center(
         child: Container(

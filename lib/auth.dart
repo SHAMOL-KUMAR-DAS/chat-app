@@ -47,16 +47,11 @@ class AuthMethods{
         "User_Name": userDetails.email.replaceAll("@gmail.com", ""),
         "Image": userDetails.photoUrl
       };
-      
+
+      //After Google sign in which page visible
       DatabaseMethods().addUserInfo(userDetails.uid, userInfoMap).then((value) {
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>All_Users()));
       });
     }
-  }
-
-  Future signOut() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.clear();
-    await auth.signOut();
   }
 }

@@ -272,7 +272,7 @@ class _CallPageState extends State<CallPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Excel IT Live Calling'),
+        title: Text('Live Calling'),
       ),
       backgroundColor: Colors.black,
       body: Center(
