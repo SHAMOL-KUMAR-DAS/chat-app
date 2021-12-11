@@ -1,86 +1,72 @@
+import 'package:chatting_app/Configure/config_button.dart';
+import 'package:chatting_app/Configure/config_color.dart';
 import 'package:chatting_app/user_info.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:email_auth/email_auth.dart';
+import 'package:pinput/pin_put/pin_put.dart';
 
-class OTP_Verification extends StatefulWidget {
+class OTPVerification extends StatefulWidget {
+
   String _email;
-  OTP_Verification(this._email);
+  OTPVerification(this._email);
+
   @override
-  _OTP_VerificationState createState() => _OTP_VerificationState(this._email);
+  _OTPVerificationState createState() => _OTPVerificationState();
 }
 
-class _OTP_VerificationState extends State<OTP_Verification> {
-  String _email;
-  _OTP_VerificationState(this._email);
+class _OTPVerificationState extends State<OTPVerification> {
 
   final TextEditingController _otpController = TextEditingController();
 
   void verifyOTP()async{
-    var res = EmailAuth.validate(receiverMail: _email, userOTP: _otpController.text);
+    var res = EmailAuth.validate(receiverMail: widget._email, userOTP: _otpController.text);
     if(res){
-      Navigator.push(context, MaterialPageRoute(builder: (context)=>User_Info(_email)));
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>User_Info(widget._email)));
     }else{
       showDialog(context: context, builder: (BuildContext context) {
-        return new AlertDialog(
-          title: new Text("Invalid OTP"),
-          content: Row(
-            children: [
-              new Text("Please Type Valid OTP"),
-              FlatButton(
-                  onPressed: (){
-                    Navigator.pop(context);
-                  },
-                  child: Text('Ok'))
-            ],
-          ),
+        return  AlertDialog(
+          title:  Text("Invalid OTP"),
+          content:  Text("Please Type Valid OTP"),
         );
       }
       );
     }
   }
+
+  final FocusNode _pinFocus = FocusNode();
+  BoxDecoration pinOtpDecoration = BoxDecoration(
+    color: colors,
+    borderRadius: BorderRadius.circular(10),
+    border: Border.all(
+      color: Colors.grey
+    )
+  );
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body:
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 80,right: 80),
-            child: TextFormField(
-              keyboardType: TextInputType.number,
-              controller: _otpController,
-              decoration: InputDecoration(
-                  hintText: "Type Your 6 digit OTP",
-                  labelText: 'OTP'
-                // suffixIcon: FlatButton(
-                //   child: Text("Send OTP"),
-                //   onPressed: (){
-                //     sendOTP();
-                //     showDialog(context: context, builder: (BuildContext context) {
-                //       return new AlertDialog(
-                //         title: new Text("Please Check Your E-Mail & Type Your OTP"),
-                //       );
-                //     }
-                //     );
-                //   },
-                // )
-              ),
-              // validator: (input){
-              //   if(input.isEmpty){
-              //     return "Please Enter an E-Mail";
-              //   }
-              //   return null;
-              // },
-            ),
+      Center(
+        child: Container(
+          padding: EdgeInsets.only(left: 25, right: 25),
+          child: PinPut(
+            fieldsCount: 6,
+            textStyle: TextStyle(fontSize: 25, color: Colors.white),
+            eachFieldWidth: 40.0,
+            eachFieldHeight: 50.0,
+            focusNode: _pinFocus,
+            controller: _otpController,
+            submittedFieldDecoration: pinOtpDecoration,
+            selectedFieldDecoration: pinOtpDecoration,
+            followingFieldDecoration: pinOtpDecoration,
+            pinAnimationType: PinAnimationType.rotation,
+            autovalidateMode: AutovalidateMode.always,
+            onSubmit: (otp)async{
+              verifyOTP();
+            },
           ),
-          SizedBox(height: MediaQuery.of(context).size.height * 0.04,),
-          FlatButton(onPressed: (){
-            verifyOTP();
-          },
-              child: Text('OTP Verification'))
-        ],
+        ),
       ),
 
     );

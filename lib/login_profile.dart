@@ -1,3 +1,4 @@
+import 'package:chatting_app/Configure/config_color.dart';
 import 'package:chatting_app/all_users.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -14,9 +15,9 @@ class _Login_ProfileState extends State<Login_Profile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: backColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: backColor,
         elevation: 0,
       ),
       body: Center(

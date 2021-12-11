@@ -1,7 +1,6 @@
-import 'package:chatting_app/call_index.dart';
-import 'package:chatting_app/login_profile.dart';
-import 'package:chatting_app/sign_in.dart';
+import 'package:chatting_app/Configure/config_color.dart';
 import 'package:chatting_app/user_profile.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -9,7 +8,6 @@ import 'package:intl/intl.dart';
 import 'dart:async';
 
 import 'package:agora_rtc_engine/rtc_engine.dart';
-// import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import './call.dart';
@@ -57,7 +55,7 @@ class _ChattingState extends State<Chatting> {
     getAndSetMessages();
   }
 
-  final _channelController = 'smart';
+  final _channelController = 'makebell';
   bool _validateError = false;
   ClientRole _role = ClientRole.Broadcaster;
 
@@ -95,11 +93,14 @@ class _ChattingState extends State<Chatting> {
   }
 
   Widget build(BuildContext context) {
+
+    Size size = MediaQuery.of(context).size;
+
     return Scaffold(
-      backgroundColor: Color(0xFFffffff),
+      backgroundColor: backColor,
       appBar: AppBar(
-        backgroundColor: Color(0xFFc25d15),
-        elevation: 0,
+        backgroundColor: colors,
+
         title: GestureDetector(
           onTap: (){
             Navigator.push(context, MaterialPageRoute(builder: (context)=>User_Profile(widget.receiverImage, widget.receiverEmail, widget.receiver)));
@@ -112,7 +113,7 @@ class _ChattingState extends State<Chatting> {
                 backgroundImage: widget.receiverImage != null ? NetworkImage(widget.receiverImage) : AssetImage('assets/images/blue.png'),
               ),
               SizedBox(
-                width: MediaQuery.of(context).size.width * 0.015,
+                width: size.width * 0.02,
               ),
               Text(widget.receiver),
             ],
@@ -122,15 +123,6 @@ class _ChattingState extends State<Chatting> {
           FlatButton(
               onPressed: () {
                 onJoin();
-                setState(() {
-                  //print(widget.userimage);
-                  // Navigator.pushAndRemoveUntil(
-                  //     context,
-                  //     MaterialPageRoute(builder: (context) => Call_Index()),
-                  //     (route) => false);
-                  //Navigator.push(context, MaterialPageRoute(builder: (context)=>Call_Index()));
-                  //_role = value;
-                });
               },
               child: Icon(
                 Icons.video_call_outlined,
@@ -138,139 +130,145 @@ class _ChattingState extends State<Chatting> {
               ))
         ],
       ),
-      body: Container(
-          child: Column(children: [
+      body: Column(children: [
         Expanded(
-          child: Container(
-            child: StreamBuilder(
-                stream: Firestore.instance
-                    .collection('chatRooms')
-                    .document(chatRoomId)
-                    .collection('Messages')
-                    .orderBy('messageTime', descending: true)
-                    .snapshots(),
-                builder: (BuildContext context,
-                    AsyncSnapshot<QuerySnapshot> snapshot) {
-                  if (!snapshot.hasData) {
-                    return Text('Loading...');
-                  } else
-                    return ListView(
-                        reverse: true,
-                        physics: BouncingScrollPhysics(),
-                        scrollDirection: Axis.vertical,
-                        children: snapshot.data.documents.map((document) {
-                          return Column(
-                              crossAxisAlignment:
-                                  widget.userEmail != document['senderEmail']
-                                      ? CrossAxisAlignment.start
-                                      : CrossAxisAlignment.end,
-                              children: [
-                                // CircleAvatar(
-                                //   radius: 20,
-                                //   backgroundImage: NetworkImage(document['receiverImage']??''),
-                                // ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Column(
-                                    children: [
-                                      Container(
-                                        decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(10),
-                                            color: widget.userEmail !=
-                                                    document['senderEmail']
-                                                ? Colors.blue.shade500
-                                                : Color(0xFF3d403d)),
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(10.0),
-                                          child: Column(
-                                            children: [
-                                              Text(
-                                                document['Message'] ?? '',
-                                                style:
-                                                    TextStyle(color: Colors.white,fontSize: 15),
+      child: Container(
+        child: StreamBuilder(
+            stream: Firestore.instance
+                .collection('chatRooms')
+                .document(chatRoomId)
+                .collection('Messages')
+                .orderBy('messageTime', descending: true)
+                .snapshots(),
+            builder: (BuildContext context,
+                AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (!snapshot.hasData) {
+                return Text('Loading...');
+              } else
+                return ListView(
+                    reverse: true,
+                    physics: BouncingScrollPhysics(),
+                    scrollDirection: Axis.vertical,
+                    children: snapshot.data.documents.map((document) {
+                      return Column(
+                          crossAxisAlignment:
+                              widget.userEmail != document['senderEmail']
+                                  ? CrossAxisAlignment.start
+                                  : CrossAxisAlignment.end,
+                          children: [
+                            // CircleAvatar(
+                            //   radius: 20,
+                            //   backgroundImage: NetworkImage(document['receiverImage']??''),
+                            // ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: widget.userEmail !=
+                                                document['senderEmail']
+                                            ? colors
+                                            : Color(0xFF3d403d)),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(10.0),
+                                      child: Column(
+                                        children: [
+                                          Text(
+                                            document['Message'] ?? '',
+                                            style:
+                                                TextStyle(color: Colors.white,fontSize: 15),
 
-                                              ),
-                                              //Text(DateFormat.yMMMd().add_jm().format(document['messageTime'].toDate()),)
-                                            ],
                                           ),
-                                        ),
+                                          //Text(DateFormat.yMMMd().add_jm().format(document['messageTime'].toDate()),)
+                                        ],
                                       ),
-                                      Text(DateFormat.yMd().add_jm().format(document['messageTime'].toDate()),)
-                                    ],
+                                    ),
                                   ),
-                                ),
-                              ]);
-                        }).toList());
-                }),
-          ),
+                                  Text(DateFormat.yMd().add_jm().format(document['messageTime'].toDate()),style: TextStyle(fontSize: 8),)
+                                ],
+                              ),
+                            ),
+                          ]);
+                    }).toList());
+            }),
+      ),
         ),
-        Padding(
-          padding: const EdgeInsets.only(bottom: 10, left: 5),
-          child: Container(
-            //height: MediaQuery.of(context).size.height * 0.06,
-            //width: 1500,
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextFormField(
-                    controller: _message,
-                    style: TextStyle(color: Colors.black),
-                    cursorColor: Colors.black,
-                    decoration: InputDecoration(
-                      hintText: "Type your message",
-                      hintStyle: TextStyle(color: Colors.black),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(25.0),
-                        borderSide:
-                            BorderSide(color: Colors.black, width: 3.0),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(25.0),
-                        borderSide: BorderSide(
-                          color: Colors.black,
-                          width: 3.0,
-                        ),
+        Row(
+          children: [
+            Expanded(
+              child: Container(
+                height: size.height * 0.06,
+                padding: EdgeInsets.only(left: 10, right: 25, bottom: 10),
+                child: TextFormField(
+                  controller: _message,
+                  style: TextStyle(color: Colors.black),
+                  cursorColor: Colors.black,
+                  decoration: InputDecoration(
+                    fillColor: textFormColor,
+                    filled: true,
+                    contentPadding: EdgeInsets.only(left: 20, top: 1, bottom: 1),
+                    hintText: "Type your message",
+                    hintStyle: TextStyle(color: Colors.black,fontSize: 12),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide:
+                          BorderSide(
+                              color: colors,
+                              width: 1
+                          ),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide(
+                        color: colors,
+                        width: 1,
                       ),
                     ),
-                    // onChanged: (input) {
-                    //   setState(() {
-                    //     _message = input;
-                    //   });
-                    // },
                   ),
+                  // onChanged: (input) {
+                  //   setState(() {
+                  //     _message = input;
+                  //   });
+                  // },
                 ),
-                FlatButton(
-                  onPressed: () async {
-                    FirebaseUser user =
-                        await FirebaseAuth.instance.currentUser();
-                    Firestore.instance
-                        .collection('chatRooms')
-                        .document(chatRoomId)
-                        .collection('Messages')
-                        .document()
-                        .setData({
-                      'Message': _message.text,
-                      //'receiverImage': widget.receiverImage,
-                      //'senderImage': widget.userImage,
-                      'senderEmail': widget.userEmail,
-                      'receiverEmail': widget.receiverEmail,
-                      'messageTime': DateTime.now(),
-                    }).then((value) => _message.text = '');
-                  },
-                  child: Icon(
-                    Icons.send,
-                    color: Colors.black,
-                  ),
-                )
-              ],
+              ),
             ),
-          ),
+
+            Padding(
+              padding: const EdgeInsets.only(bottom: 10,right: 15),
+              child: GestureDetector(
+                onTap: () async {
+                  FirebaseUser user =
+                      await FirebaseAuth.instance.currentUser();
+                  Firestore.instance
+                      .collection('chatRooms')
+                      .document(chatRoomId)
+                      .collection('Messages')
+                      .document()
+                      .setData({
+                    'Message': _message.text,
+                    //'receiverImage': widget.receiverImage,
+                    //'senderImage': widget.userImage,
+                    'senderEmail': widget.userEmail,
+                    'receiverEmail': widget.receiverEmail,
+                    'messageTime': DateTime.now(),
+                  }).then((value) => _message.text = '');
+                },
+                child: Icon(
+                  Icons.send,
+                  color: colors,
+                ),
+              ),
+            ),
+          ],
         )
-      ])),
+      ]),
     );
   }
   Widget timeView(time) {
     return Text(DateFormat.yMMMd().add_jm().format(time),
-        style: TextStyle(fontSize: 8));
+        style: TextStyle(fontSize: 6));
   }
 }

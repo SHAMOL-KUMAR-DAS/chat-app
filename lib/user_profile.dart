@@ -1,5 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:chatting_app/Configure/config_color.dart';
 import 'package:flutter/material.dart';
 
 class User_Profile extends StatefulWidget {
@@ -14,15 +13,13 @@ class _User_ProfileState extends State<User_Profile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: backColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: backColor,
         elevation: 0,
       ),
       body: Center(
         child: Column(
-          //mainAxisAlignment: MainAxisAlignment.center,
-          //crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             CircleAvatar(
               radius: 120,

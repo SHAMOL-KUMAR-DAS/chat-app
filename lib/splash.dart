@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:splashscreen/splashscreen.dart';
-import 'package:chatting_app/sign_in.dart';
+import 'package:chatting_app/Signing/sign_in.dart';
 
 class Splash extends StatefulWidget {
   @override
