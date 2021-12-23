@@ -1,7 +1,4 @@
 import 'package:chatting_app/Configure/config_color.dart';
-import 'package:chatting_app/all_users.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class Login_Profile extends StatefulWidget {
