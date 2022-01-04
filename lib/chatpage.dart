@@ -1,18 +1,14 @@
+import 'dart:math';
+
+import 'package:chatting_app/CALL/call_utilities.dart';
+import 'package:chatting_app/CALL/permissions.dart';
 import 'package:chatting_app/Configure/config_color.dart';
 import 'package:chatting_app/user_profile.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'dart:async';
-
-import 'package:agora_rtc_engine/rtc_engine.dart';
-import 'package:permission_handler/permission_handler.dart';
-
-import './call.dart';
-
-import 'database.dart';
 
 class Chatting extends StatefulWidget {
   String myuid,
@@ -32,13 +28,8 @@ class _ChattingState extends State<Chatting> {
   String chatRoomId, messageId = '';
   TextEditingController _message = TextEditingController();
 
-  // ScrollController _scrollController = ScrollController();
-  //
-  // _scrollToBottom() {
-  //   _scrollController.jumpTo(_scrollController.position.maxScrollExtent);}
-
   getMyInfo() async {
-    chatRoomId = getChatRoomId(widget.receiveruid, widget.myuid);
+    chatRoomId = getChatRoomId(widget.myuid, widget.receiveruid);
   }
 
   getChatRoomId(String a, String b) {
@@ -54,38 +45,6 @@ class _ChattingState extends State<Chatting> {
     await getMyInfo();
     getAndSetMessages();
   }
-
-  final _channelController = 'makebell';
-  bool _validateError = false;
-  ClientRole _role = ClientRole.Broadcaster;
-
-  Future<void> onJoin() async {
-    // update input validation
-    setState(() {
-      _channelController.isEmpty
-          ? _validateError = true
-          : _validateError = false;
-    });
-    if (_channelController.isNotEmpty) {
-      await _handleCameraAndMic(Permission.camera);
-      await _handleCameraAndMic(Permission.notification);
-      await _handleCameraAndMic(Permission.microphone);
-      await Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => CallPage(
-            channelName: _channelController,
-            role: _role,
-          ),
-        ),
-      );
-    }
-  }
-  Future<void> _handleCameraAndMic(Permission permission) async {
-    final status = await permission.request();
-    print(status);
-  }
-
   @override
   void initState() {
     doThisLaunch();
@@ -121,13 +80,21 @@ class _ChattingState extends State<Chatting> {
         ),
         actions: [
           FlatButton(
-              onPressed: () {
-                onJoin();
+              onPressed: () async{
+                var callChannelName = Random().nextInt(100000).toString();
+
+                await Permissions.cameraAndMicrophonePermissionsGranted()
+                    ? CallUtils.dial(
+                    currUserId: widget.receiveruid  ,
+                    currUserName: widget.userEmail.replaceAll('@gmail.com', ''),
+                    receiverId: widget.myuid,
+                    receiverName: widget.receiver,
+                    channelName: callChannelName,
+                    tokenId: 'callToken',
+                    context: context) : {};
               },
-              child: Icon(
-                Icons.video_call_outlined,
-                color: Colors.white,
-              ))
+              child: Image(image: AssetImage('assets/images/video_call.png'),height: 20,color: Colors.white,)
+          )
         ],
       ),
       body: Column(children: [

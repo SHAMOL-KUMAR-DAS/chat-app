@@ -15,6 +15,22 @@ class Sign_in extends StatefulWidget {
   _Sign_inState createState() => _Sign_inState();
 }
 
+showLoaderDialog(BuildContext context){
+  AlertDialog alert=AlertDialog(
+    content: new Row(
+      children: [
+        CircularProgressIndicator(),
+        Container(margin: EdgeInsets.only(left: 7),child:Text("Loading..." )),
+      ],),
+  );
+  showDialog(barrierDismissible: false,
+    context:context,
+    builder:(BuildContext context){
+      return alert;
+    },
+  );
+}
+
 class _Sign_inState extends State<Sign_in> {
 
   var email = TextEditingController();
@@ -27,8 +43,7 @@ class _Sign_inState extends State<Sign_in> {
     if (formstate.validate()) {
       formstate.save();
       try {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => All_Users()));
+        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => All_Users()), (route) => false);
         FirebaseUser user = await FirebaseAuth.instance
             .signInWithEmailAndPassword(email: email.text, password: password.text);
       } catch (e) {
@@ -125,7 +140,8 @@ class _Sign_inState extends State<Sign_in> {
                             borderSide: BorderSide(
                               color: colors,
                               width: 1
-                            )
+                            ),
+                              borderRadius: BorderRadius.circular(16)
                           ),
 
                       ),
@@ -136,6 +152,7 @@ class _Sign_inState extends State<Sign_in> {
                       child: ButtonConfig(
                         text: 'Sign In',
                         press: (){
+                          showLoaderDialog(context);
                           SignIn();
                         },
                       ),

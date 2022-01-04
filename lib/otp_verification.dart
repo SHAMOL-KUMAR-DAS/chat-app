@@ -22,7 +22,8 @@ class _OTPVerificationState extends State<OTPVerification> {
   void verifyOTP()async{
     var res = EmailAuth.validate(receiverMail: widget._email, userOTP: _otpController.text);
     if(res){
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>User_Info(widget._email)));
+      //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>User_Info(widget._email)));
+      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>User_Info(widget._email)), (route) => false);
     }else{
       showDialog(context: context, builder: (BuildContext context) {
         return  AlertDialog(

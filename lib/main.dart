@@ -1,13 +1,10 @@
 import 'package:chatting_app/all_users.dart';
 import 'package:chatting_app/auth.dart';
-import 'package:chatting_app/Signing/sign_in.dart';
-import 'package:chatting_app/chatpage.dart';
-import 'package:chatting_app/login_profile.dart';
-import 'package:chatting_app/otp_verification.dart';
-import 'package:chatting_app/user_info.dart';
-import 'package:flutter/material.dart';
 import 'package:chatting_app/splash.dart';
+import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import 'Signing/sign_in.dart';
 
 void main() {
   runApp(MyApp());
@@ -31,8 +28,10 @@ class MyApp extends StatelessWidget {
           builder: (context, AsyncSnapshot<dynamic> snapshot){
             if(snapshot.hasData){
               return All_Users();
+              //Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => All_Users()), (route) => false);
             } else{
               return Sign_in();
+              //Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Sign_in()), (route) => false);
             }
           }),
       debugShowCheckedModeBanner: false,

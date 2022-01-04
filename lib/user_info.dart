@@ -32,7 +32,8 @@ class _User_InfoState extends State<User_Info> {
     await DataBaseUserService(uid: user.uid).UpdateUserData(
       fname.text, lname.text, address.text, mobile.text, widget._email,
     );
-    Navigator.push(context, MaterialPageRoute(builder: (context)=>Sign_in()));
+    //Navigator.push(context, MaterialPageRoute(builder: (context)=>Sign_in()));
+    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>Sign_in()), (route) => false);
   }
 
   sendImage() async {
